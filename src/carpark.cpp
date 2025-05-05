@@ -1,54 +1,111 @@
 #include "carpark.h"
 
-CarPark::CarPark(std::vector<std::vector<std::string>> const& ids)
+CarPark::CarPark(std::vector<std::vector<std::string>> const &ids)
 {
-    // TODO
+    for (int i = 0; i < ids.size(); i++)
+    {
+        carpark.push_back({});
+        for (int t = 0; t < ids[i].size(); t++)
+        {
+            carpark[i].insert({ids[i][t], false});
+        }
+    }
 }
 
-bool CarPark::hasId(size_t deck_no, std::string const& id) const
+bool CarPark::hasId(size_t deck_no, std::string const &id) const
 {
-    // TODO
-    return false;
+    auto result = carpark.at(deck_no).find(id);
+    if (result == carpark.at(deck_no).end())
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
-bool CarPark::isOccupied(size_t deck_no, std::string const& id) const
+bool CarPark::isOccupied(size_t deck_no, std::string const &id) const
 {
-    // TODO
-    return false;
+    if (!hasId(deck_no, id))
+    {
+        return true;
+    }
+    else
+    {
+        return carpark.at(deck_no).at(id);
+    }
 }
 
-bool CarPark::occupy(size_t deck_no, std::string const& id)
+bool CarPark::occupy(size_t deck_no, std::string const &id)
 {
-    // TODO
-    return false;
+    if (!hasId(deck_no, id) || carpark.at(deck_no).at(id))
+    {
+        return false;
+    }
+    else
+    {
+        carpark.at(deck_no).at(id) = true;
+        return true;
+    }
 }
 
-bool CarPark::release(size_t deck_no, std::string const& id)
+bool CarPark::release(size_t deck_no, std::string const &id)
 {
-    // TODO
-    return false;
+    if (!carpark.at(deck_no).at(id) || !hasId(deck_no, id))
+    {
+        return false;
+    }
+    else
+    {
+        carpark.at(deck_no).at(id) = false;
+        return true;
+    }
 }
 
 size_t CarPark::vacant() const
 {
-    // TODO
-    return 0;
+    int count = 0;
+    for (int i = 0; i < carpark.size(); i++)
+    {
+        for (auto &[id, besetzt] : carpark.at(i))
+        {
+            if (!besetzt)
+            {
+                count++;
+            }
+        }
+    }
+    return count;
 }
 
 size_t CarPark::occupied() const
 {
-    // TODO
-    return 0;
+    int count = 0;
+    for (int i = 0; i < carpark.size(); i++)
+    {
+        for (auto &[id, besetzt] : carpark.at(i))
+        {
+            if (besetzt)
+            {
+                count++;
+            }
+        }
+    }
+    return count;
 }
 
 size_t CarPark::size() const
 {
-    // TODO
-    return 0;
+    int count = 0;
+    for (int i = 0; i < carpark.size(); i++)
+    {
+        count += carpark[i].size();
+    }
+    return count;
 }
 
 int CarPark::parkingFee() const
 {
-    // TODO
-    return 0;
+    return (size() - vacant());
 }
